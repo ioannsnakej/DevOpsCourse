@@ -1,25 +1,27 @@
 1. Повторить шаги, указанные в приведенной статье:
 https://andreyex.ru/linux/kak-otlazhivat-stsenarij-bash/.
 
-  Создаю(копирую) скрипт myscript.sh:
+myscript.sh:
 
-  <img width="498" height="342" alt="image" src="https://github.com/user-attachments/assets/c07a4b73-771b-409c-a81e-9cf89f9ce1ea" />
+    #!/bin/bash
+    exec 5> debug_output.txt
+    BASH_XTRACEFD="5"
+    PS4='$LINENO: '
+    set -x
+    var="Привет мир!"
+    # печать
+    echo "$var"
+    # альтернативный способ печати
+    printf "%s\n" "$var"
+    set +x 
+    echo "Мой дом - это: $HOME"
+Исправил на myscript1.sh:
 
-  Запускаю в режиме отладки:
-
-  <img width="551" height="183" alt="image" src="https://github.com/user-attachments/assets/d0e321c9-ca70-4f56-8c55-bb435cd8c1b9" />
-
-  Добавляю set -x в сам скрипт myscript.sh и запускаю:
-
-  <img width="665" height="506" alt="image" src="https://github.com/user-attachments/assets/587327f3-1ad9-4458-995a-30e0e6b66538" />
-
-  Создаю(копирую) скрипт myscript1.sh и проверяю с параметром -n:
-
-  <img width="635" height="250" alt="image" src="https://github.com/user-attachments/assets/e47e4fe5-7e59-4216-8315-3a5909e1fcbe" />
-
-  Исправил ошибку и запустил скрипт myscript1.sh с параметром -v:
-
-  <img width="586" height="286" alt="image" src="https://github.com/user-attachments/assets/6044f9f6-7e1d-4e43-bc8f-ab86ac01e810" />
+    #!/bin/bash
+    var="Привет мир"
+    echo "$var"
+    echo "Мой домашний каталог is=$HOME"
+    echo "Мое имя is=$USER"
 
 2. Повторите шаги, указанные в этой статье :
 https://basis.gnulinux.pro/ru/latest/basis/30/30._bash_скрипты_№4.html
@@ -88,15 +90,6 @@ https://basis.gnulinux.pro/ru/latest/basis/30/30._bash_скрипты_№4.html
         esac
       done
     fi
-
-
-  Пробую запускать:
-
-  <img width="722" height="765" alt="image" src="https://github.com/user-attachments/assets/421246e1-111f-491c-b7e7-cd561cb40bdc" />
-
-  Удаляю файл и запускаю повторно:
-
-  <img width="587" height="627" alt="image" src="https://github.com/user-attachments/assets/157264e1-f9b9-47b8-be90-9954097a8796" />
 
 3. Оптимизировать код из задания 2
 
@@ -177,29 +170,6 @@ https://basis.gnulinux.pro/ru/latest/basis/30/30._bash_скрипты_№4.html
               echo Username: $user Group: $group
               create_user
             fi
-
-
-  Проверяю:
-
-  создам файл:
-
-  <img width="466" height="315" alt="image" src="https://github.com/user-attachments/assets/9030cf33-ec0a-4039-ba66-9a3b82a1e23e" />
-
-  Запускаю:
-
-  с двумя параметрами:
-
-  <img width="559" height="73" alt="image" src="https://github.com/user-attachments/assets/70792e6f-4e54-474d-a47f-59350da087ce" />
-
-  с одним параметром:
-
-  <img width="685" height="124" alt="image" src="https://github.com/user-attachments/assets/5abdc394-05a3-42fc-91ed-8fc662af27d6" />
-
-  без параметров и пробуем меню:
-
-  <img width="709" height="740" alt="image" src="https://github.com/user-attachments/assets/7030feb6-c657-4aad-830e-a9537494afc1" />
-
-  <img width="709" height="413" alt="image" src="https://github.com/user-attachments/assets/0f6b157c-a5a8-4605-a399-31c0bfbbcbe2" />
 
 
 
