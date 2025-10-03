@@ -40,31 +40,47 @@
 
     sudo mysql_secure_installation
 
-  и устанавливаю пароль для root
-
-  <img width="801" height="269" alt="image" src="https://github.com/user-attachments/assets/2f0742fe-be48-4dd8-934f-f3ad559ed82e" />
+  и устанавливаю пароль для root в процессе установки
+  
+  Прописываю пользователя и пароль в файл /etc/mysql/debian.cnf
 
   подключаюсь к mysql:
 
-  <img width="824" height="279" alt="image" src="https://github.com/user-attachments/assets/46c16643-14a1-4c76-a507-dfdfa8e2e5ad" />
+    sudo mysql --defaults-file=/etc/mysql/debian.cnf
 
   создаю базу данных и подключаюсь:
 
-  <img width="481" height="165" alt="image" src="https://github.com/user-attachments/assets/ce08c047-6ff0-4f67-aca1-b351b2e8f8a8" />
-
+     create database medcenter;
+     use medcenter;
   создаю таблицы:
 
-  <img width="911" height="398" alt="image" src="https://github.com/user-attachments/assets/9b031b1c-4ab6-4193-bf56-fdb5b3fa1a04" />
-
+    create table groups (gr_id int autoincrement primary key, gr_name varchar(100), gr_temp varchar(255));
+    create table analysys (an_id int autoincrement primary key, an_name varchar(100), an_cost int, an_price int, an_group int, foreign key (an_group) references groups(gr_id));
+    create table orders (ord_id int autoincrement primary key, ord_datetime datetime, ord_an int, foreign key (ord_an) references analysys(an_id));
   Добавляю значения в таблицы:
 
-  <img width="909" height="265" alt="image" src="https://github.com/user-attachments/assets/52bc0e24-f059-43cf-9f95-5e709c11d5fa" />
-
-  <img width="913" height="460" alt="image" src="https://github.com/user-attachments/assets/27198031-f155-46db-829e-60a25c8ec0f3" />
-
+    insert into groups (gr_name, gr_temp) values ('clinic','+18-20C'), ('PCR','+18-20C'), ('BG', '+18-20C');
+    insert into analysis (an_name, an_cost, an_price, an_group) values ('ABOgroupinBlood',250,450,3 ),('OAK',150,500,1),('PCR',200,800, 2);
+    insert into orders (ord_datetime,ord_an) values ('2020-02-01 09:00:00',1),('2020-02-02 14:30:00',2),('2020-02-03 11:15:00',3)..;
   пишу селект:
 
-  <img width="908" height="754" alt="image" src="https://github.com/user-attachments/assets/6a356c03-e653-4587-929e-e14dcfe7dda6" />
+    select an_name, an_price from analysis 
+      -> join orders o on an_id=o.ord_an
+      -> where o.ord_datetime between '2020-02-05 00:00:00' and '2020-02-12 23:59:59';
+***
+    +-----------------+----------+
+    | an_name         | an_price |
+    +-----------------+----------+
+    | ABOgroupinBlood |      450 |
+    | ABOgroupinBlood |      450 |
+    | OAK             |      500 |
+    | OAK             |      500 |
+    | OAK             |      500 |
+    | PCR             |      800 |
+    | PCR             |      800 |
+    | PCR             |      800 |
+    +-----------------+----------+
+
 
 Задание 2(опционально):
 Используя left join, напишите запрос, который будет выводить список всех
@@ -74,19 +90,35 @@
 
   Создаю базу:
 
-  <img width="857" height="318" alt="image" src="https://github.com/user-attachments/assets/0f76e6a3-5d79-4191-ac9f-e1c59398f7f9" />
-
+    create database StudentCourses;
+    use StudentCourses;
   Создаю таблицы:
 
-  <img width="1871" height="413" alt="image" src="https://github.com/user-attachments/assets/d1c8175c-9eb9-4d78-93dc-f332f60245f6" />
-
+    create table courses (course_id int auto_increment primary key, course_name varchar(155));
+    create table students (student_id int auto_increment primary key, student_name varchar(255), cr_course int, foreign key (cr_course) references courses(course_id));
   Добавляю значения:
 
-  <img width="1868" height="389" alt="image" src="https://github.com/user-attachments/assets/0c0b6c23-6cc1-47b4-a347-70ad87464f00" />
-
+    INSERT INTO courses (course_name) VALUES ("DevOps-enginer"),("Front-end"),("Back-end"),("UX/UI-designer"),("System administrator"),("Business analyst");
+    INSERT INTO students (student_name, cr_course) VALUES ("Tom Searl",1), ("Mitch Lucker",3), ("Alex Koehler",5), ("Chris Fronzak",3), ("Ramin Niroomand", NULL), ("Austin Carlile", NULL), ("Jason Aalon Butler", NULL),("Sam Carter", 4), ("Vic Fuentes", 6);
   Пишу селект:
 
-  <img width="884" height="462" alt="image" src="https://github.com/user-attachments/assets/fc6f9aba-8893-4197-b8a3-56e9f3d0f039" />
+    select student_id, student_name, c.course_name from students left join courses c on cr_course=c.course_id;
+  ***
+    
+      +------------+--------------------+----------------------+
+    | student_id | student_name       | course_name          |
+    +------------+--------------------+----------------------+
+    |          1 | Tom Searl          | DevOps-enginer       |
+    |          2 | Mitch Lucker       | Back-end             |
+    |          3 | Alex Koehler       | System administrator |
+    |          4 | Chris Fronzak      | Back-end             |
+    |          5 | Ramin Niroomand    | NULL                 |
+    |          6 | Austin Carlile     | NULL                 |
+    |          7 | Jason Aalon Butler | NULL                 |
+    |          8 | Sam Carter         | UX/UI-designer       |
+    |          9 | Vic Fuentes        | Business analyst     |
+    |         10 | Tony Mahony        | NULL                 |
+    +------------+--------------------+----------------------+
 
 Задание 3:
   Шаги:
@@ -145,37 +177,6 @@
          35   *) echo "No such option"
          36   ;;
          37 esac
-
-
-  проверяю создание бэкапа:
-
-  <img width="810" height="114" alt="image" src="https://github.com/user-attachments/assets/9c417d5e-e1c9-4d53-8923-9585ad2b7029" />
-
-  кусок из файла бэкапа:
-
-  <img width="902" height="647" alt="image" src="https://github.com/user-attachments/assets/67008462-dc45-40d7-b578-0e275ad5b9fe" />
-
-  добавляю таблицу группы:
-
-  <img width="905" height="425" alt="image" src="https://github.com/user-attachments/assets/649074ec-f510-44b7-8ce2-bc526ab1baf0" />
-
-  запускаю скрипт с опцией --restore:
-
-  <img width="773" height="152" alt="image" src="https://github.com/user-attachments/assets/0b491c48-97e8-460f-926c-2190029ba187" />
-
-  проверяю бд:
-
-  <img width="912" height="666" alt="image" src="https://github.com/user-attachments/assets/d633b11f-8a20-4c5f-a851-34d4cc71d60d" />
-
-  добавляю расписание в crontab:
-
-    sudo crontab -e
-
-  <img width="1219" height="704" alt="image" src="https://github.com/user-attachments/assets/f2aa6be0-11d2-4ff3-862d-549cc278b19d" />
-
-  проверяю:
-
-  <img width="1189" height="897" alt="image" src="https://github.com/user-attachments/assets/bc12b998-d30d-4b16-af24-0ca1df88b7bb" />
 
 
   
