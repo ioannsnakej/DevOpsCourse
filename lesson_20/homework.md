@@ -16,7 +16,6 @@ Server3- 192.168.56.5
 Ansible был установлен в предыдущем занятии. Просто убедился в этом:
 
     ansible --version
-  <img width="1147" height="229" alt="image" src="https://github.com/user-attachments/assets/e90a92c4-631c-4512-9f29-3d6ab1384b59" />
 
 2. Создайте инвентарный файл, который содержит информацию о
 серверах, которые вы планируете управлять с помощью Ansible.
@@ -57,10 +56,6 @@ Ansible был установлен в предыдущем занятии. Пр
 ***
     bash ssh_copy.sh 192.168.56.3 192.168.56.4 192.168.56.5
 
-  <img width="1226" height="521" alt="image" src="https://github.com/user-attachments/assets/1c643225-c447-4e25-a46c-d5e51d6d7d23" />
-  <img width="1204" height="215" alt="image" src="https://github.com/user-attachments/assets/8f5eccad-7255-47c3-9d1e-301cfbd2c615" />
-!Так как произошла заминочка с запуском 192.168.56.4, пришлось запустить скрипт повторно с одним аргументом.
-
 3. Создайте файл конфигурации Ansible, который будет содержать
 глобальные настройки Ansible. Файл конфигурации Ansible может быть
 расположен в нескольких местах, включая каталоги /etc/ansible и ~/.ansible/.
@@ -78,7 +73,6 @@ Ansible был установлен в предыдущем занятии. Пр
 На всякий случай проверяю:
 
     ansible all -m ping
-  <img width="1807" height="622" alt="image" src="https://github.com/user-attachments/assets/283e2b92-6aef-473a-a487-d5b785e8b5f2" />
 
 4. Создайте простой плейбук Ansible, который будет выполнять простую
 задачу на одном из ваших серверов. Например, вы можете создать плейбук,
@@ -100,12 +94,3 @@ Ansible был установлен в предыдущем занятии. Пр
 Запускаю:
 
     ansible-playbook playbook.yml
-
-<img width="1877" height="484" alt="image" src="https://github.com/user-attachments/assets/1e495d3a-8bde-4777-8d69-b794dfd65942" />
-<img width="1877" height="476" alt="image" src="https://github.com/user-attachments/assets/c4823cbe-148b-415d-bddf-908c1a61dd3c" />
-
-!На третьем сервере не отработало, так понимаю, потому что я после создания машины не стал настраивать права пользователю devops
-
-Накинул прав на третьем сервере devops и запустил повторно:
-
-<img width="1831" height="880" alt="image" src="https://github.com/user-attachments/assets/f227d5e8-a1ed-4524-9496-62f73b5f3a91" />
