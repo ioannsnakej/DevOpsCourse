@@ -1,32 +1,68 @@
 Генерирую самоподписанный сертификат, попутно создаю директорию под него:
 
-<img width="805" height="184" alt="image" src="https://github.com/user-attachments/assets/f74494f4-fe88-46cf-a94c-616cd9c5764d" />
-
-<img width="922" height="139" alt="image" src="https://github.com/user-attachments/assets/3cb5fbb6-54b7-4db9-a48e-f8f675401674" />
-
-<img width="801" height="352" alt="image" src="https://github.com/user-attachments/assets/ab80c5cf-494a-402a-b570-c95e9df27e30" />
-
+     sudo openssl req -newkey rsa:4096 -nodes -sha256 -keyout /etc/nginx/ssl/certs/domain.key -x509 -addext "subjectAltName = IP:192.168.56.1" -days 365 -out /etc/nginx/ssl/certs/domain.crt
 меняю nginx config и apache2 config:
 
-<img width="891" height="701" alt="image" src="https://github.com/user-attachments/assets/f9d6068f-139e-47dd-991b-1833c70743fa" />
+    sudo vim /etc/nginx/sites-available/lesson_15_hw
+***
+    server {
+      listen 443 ssl;
+      server_name tms.by;
+      ssl_certificate /etc/nginx/ssl/certs/domain.crt;
+      ssl_certificate_key /etc/nginx/ssl/certs/domain.key;
+    
+      include /etc/nginx/ssl/ssl.conf;
+       HSTS
+      add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    
+      access_log /var/log/nginx/lesson_15_access.log;
+      error_log /var/log/nginx/lesson_15_error.log;
+    
+      root /var/www/lesson_15_hw/;
+      index index.html;
+    
+      location / {
+              #try_files $uri $uri/ = 404;
+        proxy_pass http://192.168.56.1:8080;
+        proxy_redirect off;
+      }
+    }
+    
+    server {
+      listen 80;
+      server_name tms.by;
+      return 301 https://$host$request_uri;
+    }
 
-<img width="639" height="398" alt="image" src="https://github.com/user-attachments/assets/d9bdade0-a212-43aa-a886-85bae0d75577" />
-
+***
+    sudo vim /etc/apache2/sites-available/lesson_15_hw.conf 
+***
+    <VirtualHost 192.168.56.1:8080>
+      ServerName localhost
+      DocumentRoot /var/www/lesson_15_hw
+    
+      ErrorLog /var/log/apache2/lesson_15_hw_error.log
+    
+      <Directory /var/www/lesson_15_hw>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+      </Directory>
+    
+    </VirtualHost>
 создаю ssl/ssl.conf:
 
-<img width="499" height="185" alt="image" src="https://github.com/user-attachments/assets/07198774-de7d-4396-a9a4-0fa23179a4e8" />
+    sudo vim /etc/nginx/ssl/ssl.conf 
+***
 
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
 тестирую и перезапускаю вебсерверы:
 
-<img width="903" height="248" alt="image" src="https://github.com/user-attachments/assets/8d3ecb0a-7793-4aa4-a7e2-b425300f12f5" />
-
-Пробую заходить на сайт:
-
-<img width="946" height="334" alt="image" src="https://github.com/user-attachments/assets/8a6fcd7f-5929-45d6-9dec-6baddf3e1bd6" />
-
-<img width="803" height="240" alt="image" src="https://github.com/user-attachments/assets/fbce102c-ac0f-46d0-8eb7-2b3cb2ad4dc5" /> ->
-
-<img width="528" height="203" alt="image" src="https://github.com/user-attachments/assets/c9694dc8-8dc4-4a45-ad51-fd88bb279441" />
+    sudo nginx -t
+    sudo nginx -s reload
+    sudo systemctl restart apache2.service 
+Пробую заходить на сайт.
 
 
 
