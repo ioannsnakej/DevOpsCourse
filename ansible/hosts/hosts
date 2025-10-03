@@ -1,0 +1,4 @@
+[ubuntu]
+server1 ansible_host=192.168.56.3 ansible_user=devops ansible_ssh_private_key_file=/home/ivan/.ssh/id_ed25519 
+server2 ansible_host=192.168.56.4 ansible_user=devops ansible_ssh_private_key_file=/home/ivan/.ssh/id_ed25519 
+server3 ansible_host=192.168.56.5 ansible_user=devops ansible_ssh_private_key_file=/home/ivan/.ssh/id_ed25519
