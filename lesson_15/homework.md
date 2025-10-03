@@ -4,38 +4,69 @@
 
   nginx был установлен в предыдущих домашках:
 
-  <img width="1257" height="484" alt="image" src="https://github.com/user-attachments/assets/60ff9a6e-d424-4eee-a97d-033638c91abf" />
-
+    nginx -v
   создал index.html в /var/www/lesson_15_hw:
 
-  <img width="933" height="591" alt="image" src="https://github.com/user-attachments/assets/048179bf-0a13-442b-90a3-a5360e38fae4" />
-
+    <!DOCTYPE html>
+    <html>
+        <head>
+    	<meta charset="UTF-8">
+            <title>lesson_15_hw-WebServers</title>
+        </head>
+        <body>
+            <h1>WebServers</h1>
+            <h2>Ходырев Иван</h2>
+            <p>Веб-сервер — сервер, принимающий HTTP-запросы от клиентов, обычно веб-браузеров, и выдающий им HTTP-ответы, как правило, вместе с HTML-страницей, изображением, файлом, медиа-потоком или другими данными.</p>
+    	<p>Веб-сервером называют как программное обеспечение, выполняющее функции веб-сервера, так и непосредственно компьютер (см.: Сервер (аппаратное обеспечение)), на котором это программное обеспечение работает.</p>
+    	<p>Клиент, которым обычно является веб-браузер, передаёт веб-серверу запросы на получение ресурсов, обозначенных URL-адресами. Ресурсы — это HTML-страницы, изображения, файлы, медиа-потоки или другие данные, которые необходимы клиенту. В ответ веб-сервер передаёт клиенту запрошенные данные. Этот обмен происходит по протоколу HTTP.</p>
+        </body>
+    </html>
   создаю nginx config, проверяю, делаю символическую ссылку:
 
-  <img width="927" height="554" alt="image" src="https://github.com/user-attachments/assets/af7ab481-314a-4725-9198-fe10aeadb5fa" />
-
-  перезапускаю nginx, через sudo nginx -s reload:
-
-  <img width="688" height="85" alt="image" src="https://github.com/user-attachments/assets/c63396a9-1c05-4fec-a3f3-cca69455a50a" />
+    server {
+      listen 80;
+      server_name tms.by;
+      access_log /var/log/nginx/lesson_15_access.log;
+      error_log /var/log/nginx/lesson_15_error.log;
+    
+      root /var/www/lesson_15_hw/;
+      index index.html;
+    
+      location / {
+        try_files $uri $uri/ = 404;
+            #proxy_pass http://192.168.0.1:8080;
+            #proxy_redirect off;
+      }
+    }
+  ***
   
+    sudo ln -s /etc/nginx/sites-available/lesson_15_hw /etc/nginx/sites-enabled/
+  перезапускаю nginx:
+
+    sudo nginx -s reload
   добавил домен tms.by в файл /etc/hosts
 
-  <img width="781" height="739" alt="image" src="https://github.com/user-attachments/assets/3b2474e0-9c03-4370-98be-d5bc584d9349" />
-
+    127.0.0.1 localhost
+    127.0.1.1 VM1-Ubuntu
+    192.168.56.1 tms.by
+    
+    # The following lines are desirable for IPv6 capable hosts
+    ::1     ip6-localhost ip6-loopback
+    fe00::0 ip6-localnet
+    ff00::0 ip6-mcastprefix
+    ff02::1 ip6-allnodes
+    ff02::2 ip6-allrouters
   пробую заходить:
 
-  <img width="943" height="659" alt="image" src="https://github.com/user-attachments/assets/25d5d963-3f2d-4ecf-adfd-4155e96b07dc" />
-
-
+    http://tms.by/
 2. Настройте связку Nginx + Apache. Nginx выступает в качестве reverse proxy
+
+       sudo systemctl stop nginx
 
    устанавливаю apache2:
 
-   <img width="943" height="630" alt="image" src="https://github.com/user-attachments/assets/3e87512a-e4bb-449a-8a2e-c42c4d87099d" />
-
+       sudo apt install -y apache2
    пришлось поковыряться в гугле и чатегпт, так как apache2 не хотел ни в какую запускаться (пишу для истории, мб, когда-нибудь этот опыт пригодится):
-
-   <img width="1829" height="305" alt="image" src="https://github.com/user-attachments/assets/1f27f891-1f76-4355-beaa-6af642776fd4" />
 
    Кратко, что делал и что помогло в итоге:
 
@@ -44,43 +75,71 @@
    3. попробовал отыскать данный модуль:  ls /usr/lib/apache2/modules/ | grep access_compat ls: невозможно получить доступ к '/usr/lib/apache2/modules/': Нет такого файла или каталога
    4. переустановил apache2 sudo apt install —reinstall apache2 и проверил конфиг: sudo apachectl configtest apache2: Syntax error on line 146 of /etc/apache2/apache2.conf: Syntax error on line 2 of /etc/apache2/mods-enabled/access_compat.load: Cannot load /usr/lib/apache2/modules/mod_access_compat.so into server: /usr/lib/apache2/modules/mod_access_compat.so: cannot open shared object file: No such file or directory
    5. повторно переустановил командой sudo apt install --reinstall apache2 apache2-bin
-  
-   Работает:
-
-   <img width="1615" height="430" alt="image" src="https://github.com/user-attachments/assets/084a21b4-6999-4eba-8513-3cb88a6782f6" />
 
    меняю порт на 8080 в /etc/apache2/ports.conf:
 
-   <img width="840" height="380" alt="image" src="https://github.com/user-attachments/assets/6b3824cf-0277-49be-8c2c-729d2eb3a1e0" />
-
-   проверил, что он на 8080:
-
-   <img width="915" height="470" alt="image" src="https://github.com/user-attachments/assets/23c4c4f5-ae0a-4a66-9c28-fc3e5b27c53a" />
+        # If you just change the port or add more ports here, you will likely also
+        # have to change the VirtualHost statement in
+        # /etc/apache2/sites-enabled/000-default.conf
+        
+        Listen 8080
+        
+        <IfModule ssl_module>
+                Listen 443
+        </IfModule>
+        
+        <IfModule mod_gnutls.c>
+                Listen 443
+        </IfModule>
 
    запускаю nginx:
 
-   <img width="872" height="165" alt="image" src="https://github.com/user-attachments/assets/f6fa1546-0e81-476b-9813-fe8024b70cc1" />
-
+        sudo systemctl start nginx
    создал конфиг apache2:
 
-   <img width="900" height="406" alt="image" src="https://github.com/user-attachments/assets/0ca8d356-5ccf-49e5-9b56-52a7aebd0bd9" />
-
+        <VirtualHost 192.168.56.1:8080>
+        ServerName localhost
+        DocumentRoot /var/www/lesson_15_hw
+      
+        ErrorLog /var/log/apache2/lesson_15_hw_error.log
+      
+        <Directory /var/www/lesson_15_hw>
+          Options Indexes FollowSymLinks
+          AllowOverride All
+          Require all granted
+        </Directory>
+      
+        </VirtualHost>
 
     Активирую виртуальный хост:
 
-   <img width="646" height="215" alt="image" src="https://github.com/user-attachments/assets/81296454-0ccb-4246-aee3-2b879c30aa2a" />
+       sudo a2ensite lesson_15_hw.conf
 
    меняю конфиг nginx:
 
-   <img width="848" height="385" alt="image" src="https://github.com/user-attachments/assets/e6c9c9cb-5c38-4003-9d4b-dd1abc62a73a" />
+        server {
+          listen 80;
+          server_name tms.by;
+        
+          access_log /var/log/nginx/lesson_15_access.log;
+          error_log /var/log/nginx/lesson_15_error.log;
+        
+          root /var/www/lesson_15_hw/;
+          index index.html;
+        
+          location / {
+            proxy_pass http://192.168.56.1:8080;
+          }
+        }
 
-   перезапускаю nginx:
+   перезапускаю nginx и apache2:
 
-   <img width="683" height="188" alt="image" src="https://github.com/user-attachments/assets/5422ccbe-75f8-4715-b011-104cf153c169" />
-
+       sudo nginx -s reload
+       sudo systemctl restart apache2.service 
    Проверяю:
 
-   <img width="947" height="797" alt="image" src="https://github.com/user-attachments/assets/edf34fd7-5d8b-4e96-886c-043a98a98ed5" />
+        http://tms.by/
+   
 
 
 
