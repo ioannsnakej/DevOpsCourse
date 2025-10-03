@@ -22,8 +22,6 @@ server - 192.168.56.5
 
     ssh-keygen -t rsa -b 4096
     ssh-copy-id devops@192.168.56.5
-
-  <img width="1218" height="785" alt="image" src="https://github.com/user-attachments/assets/f5c936c9-6431-45e5-851c-c7fa0e9ab07d" />
 <h2>Задание 3</h2>
 Создал директорию ansible и перешел в нее:
 
