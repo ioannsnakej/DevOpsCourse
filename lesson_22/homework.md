@@ -113,11 +113,34 @@ run и ознакомиться с ее основными параметрам�
       "sha256:131c1c486b1725d863010cbd1403e9173d791d7e83337bdb46095cbc97f9d27f"
     ]
 ***
+    docker inspect nginx | jq -r '.[] | .GraphDriver'
+***
+    {
+      "Data": {
+        "LowerDir": "/var/lib/docker/overlay2/65ea5b95f9c0ac64fb22c563e211155402126985aef954638fea30e5dfbb8125/diff:/var/lib/docker/overlay2/b637512e875a29a612e829661b2a5276027a28f489083b91dbf9468efe1511a5/diff:/var/lib/docker/overlay2/50e01eb70e4ca730ced1ac166493b2a81f64475008fc2de70709b67ef9690c78/diff:/var/lib/docker/overlay2/b5c3a21770ba742001ec8549b550039e4f421fdea35ae6078231877ef92239f9/diff:/var/lib/docker/overlay2/945391b1d06e8084a30e64011b2b51625d4828a6e6841d136d6d6dd7e7597bc4/diff:/var/lib/docker/overlay2/9a825914e1102b91ae8a8df4c293401505df99bbc4330b3fdf3a70ece03167ec/diff",
+        "MergedDir": "/var/lib/docker/overlay2/05a490c7df6585d20bc7ba23f60aedb8ed626314835ebd7a091e93693565e0ac/merged",
+        "UpperDir": "/var/lib/docker/overlay2/05a490c7df6585d20bc7ba23f60aedb8ed626314835ebd7a091e93693565e0ac/diff",
+        "WorkDir": "/var/lib/docker/overlay2/05a490c7df6585d20bc7ba23f60aedb8ed626314835ebd7a091e93693565e0ac/work"
+      },
+      "Name": "overlay2"
+    }
+***
     docker inspect hello-world --format='{{json .RootFS.Layers}}' | jq
 ***
     [
       "sha256:53d204b3dc5ddbc129df4ce71996b8168711e211274c785de5e0d4eb68ec3851"
     ]
+***
+    docker inspect hello-world | jq -r '.[] | .GraphDriver'
+***
+    {
+      "Data": {
+        "MergedDir": "/var/lib/docker/overlay2/c6c043609712b01595d9d38394133ea0d15c387880bf64607ab9606073bfc96c/merged",
+        "UpperDir": "/var/lib/docker/overlay2/c6c043609712b01595d9d38394133ea0d15c387880bf64607ab9606073bfc96c/diff",
+        "WorkDir": "/var/lib/docker/overlay2/c6c043609712b01595d9d38394133ea0d15c387880bf64607ab9606073bfc96c/work"
+      },
+      "Name": "overlay2"
+    }
 Вывожу размер всех слоев:
 
     docker history nginx
