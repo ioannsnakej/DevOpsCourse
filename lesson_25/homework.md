@@ -108,7 +108,7 @@
         multiplication_table[key] = value
     print(multiplication_table)
     
-    print(int(input("Enter second number: ")) * int(input("Enter first number: ")) / 2)
+    print(int(input("Enter second number: ")) + int(input("Enter first number: ")) / 2)
 Запуск программы:
 
     cd python
@@ -143,4 +143,4 @@
     {'0 * 5': 0, '1 * 5': 5, '2 * 5': 10, '3 * 5': 15, '4 * 5': 20, '5 * 5': 25, '6 * 5': 30, '7 * 5': 35, '8 * 5': 40, '9 * 5': 45, '10 * 5': 50}
     Enter second number: 8
     Enter first number: 9
-    36.0
+    8.5
