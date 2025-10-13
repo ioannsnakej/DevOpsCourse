@@ -8,11 +8,10 @@
 Создаю структуру и инициализирую роль:
 
     cd ansible/
-    mkdire roles
+    mkdir roles
     cd roles/
     ansible-galaxy init install-nginx
 
-<img width="611" height="615" alt="image" src="https://github.com/user-attachments/assets/0144e413-1b0b-4ee9-b063-a88e1079c26a" />
 
 
 
