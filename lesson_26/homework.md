@@ -73,6 +73,21 @@
 регистре, количество цифр и количество символов пунктуации.</li>
 <li>Написать скрипт, который принимает на вход два списка и выводит на
 экран элементы, которые присутствуют в обоих списках.</li>
+
+    first_list = ["Ivan", "khodyrev", 28, "Novosibirsk"]
+    second_list = ["ivan", "khodyrev", 28, "nsk"]
+    
+    similar_list=[]
+    
+    for element in first_list:
+        if element in second_list:
+            similar_list.append(element)
+    
+    print(similar_list)
+
+Вывод:
+
+    ['khodyrev', 28]
 <li>Написать скрипт, который принимает на вход массив чисел и сортирует
 его в порядке убывания.</li>
 <li>Написать скрипт, который принимает на вход кортеж и проверяет, все
