@@ -70,4 +70,54 @@ file1.txt, file2.txt и file3.txt. Наконец, выведите список
 каждого пользователя. Затем создайте список пользователей в виде
 списка словарей, передайте его в шаблон и отобразите результат на
 экране.</li> 
+template.htm:
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <ul>
+          {% for item in users %}
+             <li>username:{{ item.user }} usermail:{{ item.email }}</li>
+          {% endfor %}
+        </ul> 
+    </body>
+    </html>
+temp.py:
+
+    from jinja2 import Template
+    
+    with open ('template.html') as file:
+        template = Template(file.read())
+    
+    output = template.render(
+        title='User list', 
+        users=[
+            {'user':'john', 'email':'john@mail.com'},
+            {'user':'ivan', 'email':'ivan@mail.com'},
+            {'user':'andy', 'email':'andy@mail.com'}
+            ]
+        )
+    print(output)
+Out:
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>User list</title>
+    </head>
+    <body>
+        <ul>
+          
+             <li>username:john usermail:john@mail.com</li>
+          
+             <li>username:ivan usermail:ivan@mail.com</li>
+          
+             <li>username:andy usermail:andy@mail.com</li>
+          
+        </ul> 
+    </body>
+    </html>
 </ol>
