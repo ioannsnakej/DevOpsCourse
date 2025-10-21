@@ -39,6 +39,43 @@ Python.</h2>
 счета, имя владельца, баланс и методы пополнения и снятия денег со
 счета. Создайте несколько объектов этого класса и вызовите его методы
 для каждого объекта.</li>
+
+      class BankAccount():
+          def __init__(self, number, owner, balance):
+              self.number = number
+              self.owner = owner
+              self.balance = balance
+      
+          def deposit(self, amount):
+              self.amount = amount
+              self.balance+= self.amount
+              return(f"Пополнение баланса на {self.amount}, остаток средств: {self.balance}")
+      
+          
+          def withdraw(self, amount):
+              self.amount = amount
+              self.balance-= self.amount
+              return(f"Списание средств в размере - {self.amount}, остаток средств: {self.balance}")
+      
+      def main():
+          ivan = BankAccount(666, "Ivan Khodyrev", 5000000000)
+          john = BankAccount(777, "John Doe", 123.34)
+      
+          print(f"Ivan Khodyrev account: {ivan.deposit(10000000)}")
+          print(f"Ivan Khodyrev account: {ivan.withdraw(26.99)}")
+      
+          print(f"John Doe account: {john.deposit(5000)}")
+          print(f"John Doe account: {john.withdraw(99.99)}")
+      
+      
+      if __name__ == "__main__":
+          main()
+***
+      python3 bank_account.py 
+      Ivan Khodyrev account: Пополнение баланса на 10000000, остаток средств: 5010000000
+      Ivan Khodyrev account: Списание средств в размере - 26.99, остаток средств: 5009999973.01
+      John Doe account: Пополнение баланса на 5000, остаток средств: 5123.34
+      John Doe account: Списание средств в размере - 99.99, остаток средств: 5023.35
 <li>Создайте класс "Студент", который имеет атрибуты имя, возраст и
 средний балл. Создайте методы для вычисления среднего балла и
 определения статуса студента (отличник, хорошист, троечник).Создайте
