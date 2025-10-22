@@ -81,6 +81,45 @@ Python.</h2>
 определения статуса студента (отличник, хорошист, троечник).Создайте
 несколько объектов этого класса и вызовите его методы для каждого
 объекта.</li>
+
+      class Student:
+          def __init__(self, name, age, average = []):
+              self.name = name
+              self.age = age
+              self.average = average
+      
+          def calculate_average(self, grades):
+              self.grades = grades
+              self.average = sum(self.grades)/len(self.grades)
+              return self.average
+      
+          def status(self):
+              
+              if self.average == 5:
+                  return "отличник"
+              elif self.average >= 4:
+                  return "хорошист"
+              elif self.average >= 3:
+                  return "отличник"
+      
+      def main():
+          ivan = Student("Ivan Khodyrev", 28)
+          print(f"Средний балл Ивана Ходырев: {ivan.calculate_average([5,3,4,3,4,4,5,2])}")
+          print(f"Оценки Ивана: {ivan.grades}")
+          print(f"Статус Ивана: {ivan.status()}")
+          print(f"Средний балл Ивана Ходырев: {ivan.calculate_average([5,3,4,3,4,4,5,2,5,5,5,5,5,5])}")
+          print(f"Оценки Ивана: {ivan.grades}")
+          print(f"Статус Ивана: {ivan.status()}")
+      
+      if __name__ == "__main__":
+          main()
+***
+      Средний балл Ивана Ходырев: 3.75
+      Оценки Ивана: [5, 3, 4, 3, 4, 4, 5, 2]
+      Статус Ивана: отличник
+      Средний балл Ивана Ходырев: 4.285714285714286
+      Оценки Ивана: [5, 3, 4, 3, 4, 4, 5, 2, 5, 5, 5, 5, 5, 5]
+      Статус Ивана: хорошист
 <li>Создайте класс "Книга", который имеет атрибуты название, автор и год
 издания. Создайте методы для получения и изменения этих
 атрибутов.Создайте несколько объектов этого класса и вызовите его
