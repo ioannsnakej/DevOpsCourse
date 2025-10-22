@@ -167,4 +167,59 @@ Python.</h2>
 атрибутов. Создайте несколько объектов этого класса и вызовите его
 методы для каждого объекта</li>
 
+      class Car:
+          def __init__(self, stamp, model, color, year):
+              self.stamp = stamp
+              self.model = model
+              self.color = color
+              self.year = year
+          
+          def car_info(self):
+              print(f"Марка: {self.stamp}")
+              print(f"Модель: {self.model}")
+              print(f"Цвет: {self.color}")
+              print(f"Год выпуска: {self.year}")
+                    
+          def change_info(self, stamp=None, model=None, color=None, year=None):
+              if stamp:
+                  self.stamp = stamp
+              if model:
+                  self.model = model
+              if color:
+                  self.color = color
+              if year:
+                  self.year = year
+              print("Информация обновлена")
+            
+      def main():
+          auto = Car("Mercedes-Benz", "SL 230 W113", "Blue sky", 1969)
+          print("Информация о первом автомобиле:")
+          auto.car_info()
+          auto2 = Car(auto.stamp, auto.model, auto.color, auto.year)
+          print("Инфомрация о втором автомобиле:")
+          auto2.car_info()
+          auto2.change_info(color="green", year=1970)
+          print("Инфомрация о втором автомобиле:")
+          auto2.car_info()
+                    
+      
+      if __name__ == "__main__":
+          main()
+***
+      Информация о первом автомобиле:
+      Марка: Mercedes-Benz
+      Модель: SL 230 W113
+      Цвет: Blue sky
+      Год выпуска: 1969
+      Инфомрация о втором автомобиле:
+      Марка: Mercedes-Benz
+      Модель: SL 230 W113
+      Цвет: Blue sky
+      Год выпуска: 1969
+      Информация обновлена
+      Инфомрация о втором автомобиле:
+      Марка: Mercedes-Benz
+      Модель: SL 230 W113
+      Цвет: green
+      Год выпуска: 1970
 </ol>
