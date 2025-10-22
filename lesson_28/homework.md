@@ -124,8 +124,47 @@ Python.</h2>
 издания. Создайте методы для получения и изменения этих
 атрибутов.Создайте несколько объектов этого класса и вызовите его
 методы для каждого объекта.</li>
+
+      class Book:
+          def __init__(self, title, author, year):
+              self.title = title
+              self.author = author
+              self.year = year
+      
+          def books_info(self):
+              print(f"Название: {self.title}")
+              print(f"Автор: {self.author}")
+              print(f"Год издания: {self.year}")
+              
+          def change_info(self, title=None, author=None, year=None):
+              if title:
+                  self.title = title
+              if author:
+                  self.author = author
+              if year:
+                  self.year = year
+              print("Информация о книге обновлена")
+      
+      def main():
+          hobbit = Book("Hobbit", "J. R. R. Tolkien", 1981)
+          hobbit.books_info()
+      
+          hobbit.change_info("The Hobbit", "John Ronald Reuel Tolkien")
+          hobbit.books_info()
+      
+      if __name__ == "__main__":
+          main()
+***
+      Название: Hobbit
+      Автор: J. R. R. Tolkien
+      Год издания: 1981
+      Информация о книге обновлена
+      Название: The Hobbit
+      Автор: John Ronald Reuel Tolkien
+      Год издания: 1981
 <li>Создайте класс "Автомобиль", который имеет атрибуты марка, модель,
 цвет и год выпуска. Создайте методы для получения и изменения этих
 атрибутов. Создайте несколько объектов этого класса и вызовите его
 методы для каждого объекта</li>
+
 </ol>
