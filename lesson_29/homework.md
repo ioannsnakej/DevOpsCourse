@@ -149,7 +149,7 @@ Ansible, например, настройте оповещения о успеш
 
 <img width="538" height="302" alt="image" src="https://github.com/user-attachments/assets/62785396-6b84-403b-9758-bdfa818fb143" />
 
-
+Репозиторий на dockerhub тоже создался - https://hub.docker.com/repository/docker/ivankhodyrev/bookstore/general
 
 
 
