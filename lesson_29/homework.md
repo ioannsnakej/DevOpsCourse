@@ -129,25 +129,25 @@ Ansible, например, настройте оповещения о успеш
 
 В открывшемся окне заполняем примерно так:
 
-<img width="1269" height="740" alt="image" src="https://github.com/user-attachments/assets/afc26bcc-1116-4d34-92d8-51cc33adb7c7" />
+![addpipeline](/lesson_29/screenshots/addpipeline.png)
 
 У поля "Credentials" нажимаем "+Add" - "Jenkins":
 
 Заполняем примерно так:
 
-<img width="1205" height="699" alt="image" src="https://github.com/user-attachments/assets/b86b5663-c8db-46e6-a020-66e0ba95432d" />
+![addgithubssh](/lesson_29/screenshots/addgithubssh.png)
 
-<img width="1199" height="702" alt="image" src="https://github.com/user-attachments/assets/c21d44f9-84ef-4f6a-b55c-902920919b1d" />
+![addgithubssh_key](/lesson_29/screenshots/addgithubssh_key.png)
 
 после этих манипуляций в поле "Credentials" выбираем созданное "git (github_ssh)" и сохраняем.
 <h3>Запуск и проверка</h3>
 Переходим в нашу сборку http://localhost:8080/job/bookstore-build/ и нажимаем "Собрать с параметрами"
 
-<img width="891" height="629" alt="image" src="https://github.com/user-attachments/assets/1d39ff95-311f-4571-9cfc-819df14f78dd" />
+![run](/lesson_29/screenshots/run.png)
 
 Успех:
 
-<img width="538" height="302" alt="image" src="https://github.com/user-attachments/assets/62785396-6b84-403b-9758-bdfa818fb143" />
+![done](/lesson_29/screenshots/done.png)
 
 Репозиторий на dockerhub тоже создался - https://hub.docker.com/repository/docker/ivankhodyrev/bookstore/general
 
