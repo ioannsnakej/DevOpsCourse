@@ -151,7 +151,7 @@ Ansible, например, настройте оповещения о успеш
 
 Репозиторий на dockerhub тоже создался - https://hub.docker.com/repository/docker/ivankhodyrev/bookstore/general
 
-Добавляю в stege('Build') скрипт:
+Добавляю в stage('Build') скрипт:
 
     script {
                sh """
