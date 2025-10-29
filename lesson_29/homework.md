@@ -151,5 +151,43 @@ Ansible, например, настройте оповещения о успеш
 
 Репозиторий на dockerhub тоже создался - https://hub.docker.com/repository/docker/ivankhodyrev/bookstore/general
 
+Добавляю в stege('Build') скрипт:
+
+    script {
+               sh """
+                  curl -s -X POST https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage \
+                  -d chat_id=${env.TG_CHAT_ID} \
+                  -d parse_mode=Markdown \
+                  -d text="🏃Начата сборка проекта ${env.PRJ_NAME}"
+                """
+            }
+Добавляю в конце Jenkinsfile раздел post:
+
+     post {
+        success {
+          script {
+            sh """
+              curl -s -X POST https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage \
+              -d chat_id=${env.TG_CHAT_ID} \
+              -d parse_mode=Markdown \
+              -d text="✅Success! Проект:${env.PRJ_NAME}"
+            """
+          }
+        }
+    
+        failure {
+          script {
+            sh """
+                  curl -s -X POST https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage \
+                  -d chat_id=${env.TG_CHAT_ID} \
+                  -d parse_mode=Markdown \
+                  -d text="❌Failed! Проект:${env.PRJ_NAME}"
+                """
+          }
+        }
+      }
+  Запускаю и смотрю уведомления в ТГ:
+
+  ![notify](/lesson_29/screenshots/notify.png)
 
 
