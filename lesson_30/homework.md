@@ -83,16 +83,35 @@ Groovy и работа с DSL job.</h2>
 
     sudo apt install ansible
 
-Создал директорию ansible и перешел в нее:
+Создал директорию ansible, перешел в нее и инициировал роль:
 
-    mkdir ansible
-    cd ansible
+    cd ansible/
+    mkdir roles
+    cd roles/
+    ansible-galaxy init install-nginx
 Создал структуру в ansible:
 
     .
-    └── jenkins-agent
-        ├── ansible.cfg
-        └── hosts
+    ├── ansible.cfg
+    ├── hosts
+    └── roles
+        └── install-java
+            ├── defaults
+            │   └── main.yml
+            ├── files
+            ├── handlers
+            │   └── main.yml
+            ├── meta
+            │   └── main.yml
+            ├── README.md
+            ├── tasks
+            │   └── main.yml
+            ├── templates
+            ├── tests
+            │   ├── inventory
+            │   └── test.yml
+            └── vars
+                └── main.yml
 hosts:
 
     [jenkins-agent]
