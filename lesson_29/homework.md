@@ -38,7 +38,7 @@ Ansible, например, настройте оповещения о успеш
     pipeline {
       agent any
       parameters {
-        booleanParam(name: 'RUN_TEST', defaultValue: 'true') 
+        booleanParam(name: 'RUN_TESTS', defaultValue: 'true')
         string(name: 'TAG', defaultValue: 'latest')
         gitParameter(type: 'PT-BRANCH', name: 'REVISION', branchFilter: 'origin/(.*)', defaultValue: 'main', selectedValue: 'DEFAULT')
       }
@@ -48,9 +48,12 @@ Ansible, например, настройте оповещения о успеш
         PRJ_NAME="bookstore"
         GIT_URL="https://github.com/ioannsnakej/bookstore.git"
         TOKEN=credentials('docker_token')
+        TG_BOT_TOKEN=credentials('bot_token')
+        TG_CHAT_ID=credentials('chat_id')
       }
     
       stages {
+    
         stage('Clone repo') {
           steps {
             script {
@@ -72,6 +75,15 @@ Ansible, например, настройте оповещения о успеш
         stage('Build image') {
           steps {
             script {
+               sh """
+                  curl -s -X POST https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage \
+                  -d chat_id=${env.TG_CHAT_ID} \
+                  -d parse_mode=Markdown \
+                  -d text="🏃Начата сборка проекта ${env.PRJ_NAME}"
+                """
+            }
+    
+            script {
               sh """
                 cd ${env.PRJ_NAME}
                 docker build -t ${env.GIT_NAME}/${env.PRJ_NAME}:${params.TAG} .
@@ -90,14 +102,37 @@ Ansible, например, настройте оповещения о успеш
           steps {
             script {
               sh """
-                cd ${ennv.PRJ_NAME}
+                cd ${env.PRJ_NAME}
                 echo "App ready"
               """
             }
           }
         }
       }
-        
+    
+      post {
+        success {
+          script {
+            sh """
+              curl -s -X POST https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage \
+              -d chat_id=${env.TG_CHAT_ID} \
+              -d parse_mode=Markdown \
+              -d text="✅Success! Проект:${env.PRJ_NAME}"
+            """
+          }
+        }
+    
+        failure {
+          script {
+            sh """
+                  curl -s -X POST https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage \
+                  -d chat_id=${env.TG_CHAT_ID} \
+                  -d parse_mode=Markdown \
+                  -d text="❌Failed! Проект:${env.PRJ_NAME}"
+                """
+          }
+        }
+      }
     }
 ***
     git status
