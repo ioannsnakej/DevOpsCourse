@@ -88,7 +88,7 @@ Groovy и работа с DSL job.</h2>
     cd ansible/
     mkdir roles
     cd roles/
-    ansible-galaxy init install-nginx
+    ansible-galaxy init install-java
 Создал структуру в ansible:
 
     .
