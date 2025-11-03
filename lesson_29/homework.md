@@ -149,7 +149,7 @@ Ansible, например, настройте оповещения о успеш
 Это необходимо, чтобы jenkins мог пушить наш образ в удаленный docker hub.
 <h3>Добавление ключа Jenkins в GitHub</h3>
 
-    sudo =u jenkins -i
+    sudo -u jenkins -i
     ssh-keygen -t ed25519
     cat ~/.ssh/id_ed25519.pub
 Копируем вывод. Переходим в наш проект в GitHub: https://github.com/ioannsnakej/bookstore/ - settings - deploy keys. И добавляем наш ключ.
