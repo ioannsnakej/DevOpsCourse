@@ -123,7 +123,7 @@ install_docker - устанавливаем docker, он нам понадоби
         state: present
         update_cache: yes    
     
-    - name: Add Docker repo key #Эту таску изначально писал, как показано на уроке - через apt-key, но рукгалось на модуль apt-key
+    - name: Add Docker repo key
       shell: |
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/docker.gpg
       args:
@@ -143,6 +143,9 @@ install_docker - устанавливаем docker, он нам понадоби
           - docker-compose-plugin
         state: present
         update_cache: yes
+      notify:
+        - Enable docker
+        - Restart docker 
 </li>
 <li>
 setup_agent - роль добавляет публичный ключ jenkins с master в файл authorized_key на агенте
@@ -185,9 +188,27 @@ main - здесь мы просто добавляем все наши таск�
 </li>
 </ol>
 
-Чтобв наша таска setup_agent отработала, создаем file в который копируем наш публичный ключ пользователя jenkins:
+Чтобs наша таска setup_agent отработала, создаем file в который копируем наш публичный ключ пользователя jenkins:
 
     sudo cp /var/lib/jenkins/.ssh/id_ed25519.pub roles/setup-jenkins-agent/files/jenkins_key.pub
+
+Добавляем таски Restart и Enable в handlers/main.yml:
+
+    vim roles/setup-jenkins-agent/handlers/main.yml 
+***
+
+    #SPDX-License-Identifier: MIT-0
+    ---
+    # handlers file for setup-jenkins-agent
+    - name: Restart docker
+      systemd:
+        name: docker
+        state: restarted
+    
+    - name: Enable docker
+      systemd:
+        name: docker
+        state: enabled
 Пишем наш playbok:
 
     mkdir playbooks
