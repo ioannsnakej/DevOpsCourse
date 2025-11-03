@@ -222,3 +222,12 @@ main - здесь мы просто добавляем все наши таск�
 Запускаем:
 
     ansible-playbook -i hosts playbooks/setup-jenkins-agent.yml --diff
+
+![notify](/lesson_20/screenshots/start_playbook1.png)
+
+![notify](/lesson_20/screenshots/start_playbook2.png)
+Подключаемся к нашему агенту по ssh, чтобы убедиться, что все выполнилось:
+
+    ssh devops@192.168.56.5
+
+![notify](/lesson_20/screenshots/jenkins-agent-res.png)
