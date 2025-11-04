@@ -65,7 +65,7 @@ Groovy и работа с DSL job.</h2>
     </ol>
 </ol>
 
-Подключаем jenkins агнета:
+<h3>Подключаем jenkins агнета:</h3>
 1. Запускаем в virtual-box нашу ВМ-агента в фоновом режиме:
   
   ![notify](/lesson_30/screenshots/start-vm.png)
@@ -75,6 +75,7 @@ Groovy и работа с DSL job.</h2>
 4. Добавляем jenkins credential:  Переходим в "Настроить Jenkins"->"Credentials"->"Global"->"Add Credentials"
 >[!NOTE]
 >это приватный ключ пользователя jenkins, лежит в /var/lib/jenkins/.ssh/id_ed25519
+
    ![notify](/lesson_30/screenshots/jenkins-credential.png)
 5. Переходим в "Настроить Jenkins"->"Nodes"->"New Node"
 >[!NOTE]
@@ -91,8 +92,13 @@ Groovy и работа с DSL job.</h2>
 
    ![notify](/lesson_30/screenshots/new-node2.png)
 
-6. Отключаем агента master. Надо открыть настрйоки и выставить "Количество проссеров-исполнителей": 0
+6. Отключаем агента master. Надо открыть настройки и выставить "Количество проссеров-исполнителей": 0
 
     ![notify](/lesson_30/screenshots/master_off.png)
 
+<h3>Подключаем jenkins таргет:</h3>
+
+Аналогично, как подключали агента, так настраиваем и подключаем таргет.
+
+![notify](/lesson_30/screenshots/jenkins-nodes.png)
 
