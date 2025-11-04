@@ -65,63 +65,34 @@ Groovy и работа с DSL job.</h2>
     </ol>
 </ol>
 
-Так, начну пожалуй с попыток применить ansible для ностройки jenkins-agent (192.168.56.5)
+Подключаем jenkins агнета:
+<ol>
+<li>
+  Запускаем в virtual-box нашу ВМ-агента в фоновом режиме:
+  
+  ![notify](/lesson_30/screenshots/start_vm.png)
+</li>
+<li>
+  Выполняем на основном хосте наш playbook по настройке jenkins-agent из <a href="https://github.com/ioannsnakej/DevOpsCourse/blob/main/lesson_20/homework2.md">lesson_20</a> 
+</li>
+<li>
+  На нашем master открываем в браузере jenkins (http://localhost:8080/)
 
-Обновил список пакетов:
+  Переходим в "Настроить Jenkins"->"Nodes"->"New Node"
 
-    sudo apt update
-Установил пакет software-properties-common, который позволит добавлять репозитории:
+   ![notify](/lesson_30/screenshots/new-node.png)
 
-    sudo apt install software-properties-common
-Добавил репозиторий Ansible PPA:
+   ![notify](/lesson_30/screenshots/new-node1.png)
 
-    sudo apt-add-repository ppa:ansible/ansible
-Обновил список пакетов:
+   ![notify](/lesson_30/screenshots/new-node2.png)
 
-    sudo apt update
-Установил Ansible:
-
-    sudo apt install ansible
-
-Создал директорию ansible, перешел в нее и инициировал роль:
-
-    cd ansible/
-    mkdir roles
-    cd roles/
-    ansible-galaxy init install-java
-Создал структуру в ansible:
-
-    .
-    ├── ansible.cfg
-    ├── hosts
-    └── roles
-        └── install-java
-            ├── defaults
-            │   └── main.yml
-            ├── files
-            ├── handlers
-            │   └── main.yml
-            ├── meta
-            │   └── main.yml
-            ├── README.md
-            ├── tasks
-            │   └── main.yml
-            ├── templates
-            ├── tests
-            │   ├── inventory
-            │   └── test.yml
-            └── vars
-                └── main.yml
-hosts:
-
-    [jenkins-agent]
-    server3 ansible_host=192.168.56.5 ansible_user=devops ansible_ssh_private_key_file=/home/ivan/.ssh/id_ed25519
-ansible.cfg:
-
-    [defaults]
-    inventory         = ./hosts
-    host_key_checking = false
-    remote_user       = devops
-    private_key_file  = /home/ivan/.ssh/id_ed25519
+>[!NOTE]
+>Количество процессов-исполнителей: "2" = количеству числа ядер<br>
+>Удалённая корневая директория: "/home/jenkins" - удаленная корневая директория jenkins
+>Метки: "docker"<br>
+>Использование: "Собирать только проекты с метками, совпадающими с этим узлом" - чтобы Jenkins не насовал чужих задач<br>
+>Способ запуска: "Launch agents via SSH", Host: 192.168.56.5, Credentials: "git (github_ssh)" (вообще это приватный ключ jenkins из /var/lib/jenkins/.ssh/id_ed25519)<br>
+>Host Key Verification Strategy: "Non verifying Verification Strategy"
+</li>
 
   
