@@ -66,26 +66,13 @@ Groovy и работа с DSL job.</h2>
 </ol>
 
 Подключаем jenkins агнета:
-<ol>
-<li>
-  Запускаем в virtual-box нашу ВМ-агента в фоновом режиме:
+1. Запускаем в virtual-box нашу ВМ-агента в фоновом режиме:
   
   ![notify](/lesson_30/screenshots/start_vm.png)
-</li>
-<li>
-  Выполняем на основном хосте наш playbook по настройке jenkins-agent из <a href="https://github.com/ioannsnakej/DevOpsCourse/blob/main/lesson_20/homework2.md">lesson_20</a> 
-</li>
-<li>
-  На нашем master открываем в браузере jenkins (http://localhost:8080/)
 
-  Переходим в "Настроить Jenkins"->"Nodes"->"New Node"
-
-   ![notify](/lesson_30/screenshots/new-node.png)
-
-   ![notify](/lesson_30/screenshots/new-node1.png)
-
-   ![notify](/lesson_30/screenshots/new-node2.png)
-
+2. Выполняем на основном хосте наш playbook по настройке jenkins-agent из <a href="https://github.com/ioannsnakej/DevOpsCourse/blob/main/lesson_20/homework2.md">lesson_20</a>
+3. На нашем master открываем в браузере jenkins (http://localhost:8080/)
+4. Переходим в "Настроить Jenkins"->"Nodes"->"New Node"
 >[!NOTE]
 >Количество процессов-исполнителей: "2" = количеству числа ядер<br>
 >Удалённая корневая директория: "/home/jenkins" - удаленная корневая директория jenkins
@@ -93,6 +80,15 @@ Groovy и работа с DSL job.</h2>
 >Использование: "Собирать только проекты с метками, совпадающими с этим узлом" - чтобы Jenkins не насовал чужих задач<br>
 >Способ запуска: "Launch agents via SSH", Host: 192.168.56.5, Credentials: "git (github_ssh)" (вообще это приватный ключ jenkins из /var/lib/jenkins/.ssh/id_ed25519)<br>
 >Host Key Verification Strategy: "Non verifying Verification Strategy"
-</li>
 
-  
+   ![notify](/lesson_30/screenshots/new-node.png)
+
+   ![notify](/lesson_30/screenshots/new-node1.png)
+
+   ![notify](/lesson_30/screenshots/new-node2.png)
+
+5. Отключаем агента master. Надо открыть настрйоки и выставить "Количество проссеров-исполнителей": 0
+
+    ![notify](/lesson_30/screenshots/master_off.png)
+
+
