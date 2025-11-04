@@ -72,13 +72,17 @@ Groovy и работа с DSL job.</h2>
 
 2. Выполняем на основном хосте наш playbook по настройке jenkins-agent из <a href="https://github.com/ioannsnakej/DevOpsCourse/blob/main/lesson_20/homework2.md">lesson_20</a>
 3. На нашем master открываем в браузере jenkins (http://localhost:8080/)
-4. Переходим в "Настроить Jenkins"->"Nodes"->"New Node"
+4. Добавляем jenkins credential:  Переходим в "Настроить Jenkins"->"Credentials"->"Global"->"Add Credentials"
+>[!NOTE]
+>это приватный ключ пользователя jenkins, лежит в /var/lib/jenkins/.ssh/id_ed25519
+   ![notify](/lesson_30/screenshots/jenkins-credential.png)
+5. Переходим в "Настроить Jenkins"->"Nodes"->"New Node"
 >[!NOTE]
 >Количество процессов-исполнителей: "2" = количеству числа ядер<br>
 >Удалённая корневая директория: "/home/jenkins" - удаленная корневая директория jenkins
 >Метки: "docker"<br>
 >Использование: "Собирать только проекты с метками, совпадающими с этим узлом" - чтобы Jenkins не насовал чужих задач<br>
->Способ запуска: "Launch agents via SSH", Host: 192.168.56.5, Credentials: "git (github_ssh)" (вообще это приватный ключ jenkins из /var/lib/jenkins/.ssh/id_ed25519)<br>
+>Способ запуска: "Launch agents via SSH", Host: 192.168.56.5, Credentials: "jenkins (jenkins_ssh)"<br>
 >Host Key Verification Strategy: "Non verifying Verification Strategy"
 
    ![notify](/lesson_30/screenshots/new-node.png)
@@ -87,7 +91,7 @@ Groovy и работа с DSL job.</h2>
 
    ![notify](/lesson_30/screenshots/new-node2.png)
 
-5. Отключаем агента master. Надо открыть настрйоки и выставить "Количество проссеров-исполнителей": 0
+6. Отключаем агента master. Надо открыть настрйоки и выставить "Количество проссеров-исполнителей": 0
 
     ![notify](/lesson_30/screenshots/master_off.png)
 
