@@ -68,7 +68,7 @@ Groovy и работа с DSL job.</h2>
 Подключаем jenkins агнета:
 1. Запускаем в virtual-box нашу ВМ-агента в фоновом режиме:
   
-  ![notify](/lesson_30/screenshots/start_vm.png)
+  ![notify](/lesson_30/screenshots/start-vm.png)
 
 2. Выполняем на основном хосте наш playbook по настройке jenkins-agent из <a href="https://github.com/ioannsnakej/DevOpsCourse/blob/main/lesson_20/homework2.md">lesson_20</a>
 3. На нашем master открываем в браузере jenkins (http://localhost:8080/)
