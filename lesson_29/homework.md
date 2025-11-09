@@ -154,7 +154,7 @@ Ansible, например, настройте оповещения о успеш
     cat ~/.ssh/id_ed25519.pub
 Копируем вывод. Переходим в наш проект в GitHub: https://github.com/ioannsnakej/bookstore/ - settings - deploy keys. И добавляем наш ключ.
 <h3>Создание item в Jenkins</h3>
-В браузере переходим на https://github.com/ioannsnakej/bookstore/
+В браузере переходим на http://localhost:8080/
 
 Нажимаем "Создать item"
 
