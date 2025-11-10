@@ -114,8 +114,49 @@ Groovy и работа с DSL job.</h2>
 ![notify](/lesson_30/screenshots/docker_creds.png)
 <h3>Создание и настройка shared-lib</h3>
 
-Создаем [shared-lib](https://github.com/ioannsnakej/jenkins-shared-lib/tree/main) со скриптами groovy
+Создаем [shared-lib](https://github.com/ioannsnakej/jenkins-shared-lib/tree/main) со скриптами groovy:
 
+msgTmpl.md:
+
+    ${prefix} ${jobName} #${buildNumber} Status: ${buildStatus} Job Link: ${buildUrl}
+dockerBuild.groovy:
+
+    def login() {
+      withCredentials([usernamePassword(credentialsId: 'docker_creds', usernameVariable: 'username', passwordVariable: 'password')]) {
+        sh "docker login -u ${username} -p ${password}"
+      }
+    }
+    
+    def build(String tag) {
+      sh "docker build -t ${tag} ./"
+    }
+    
+    def push(String tag) {
+      sh "docker push ${tag}"
+    }
+
+notifyTelegram.groovy:
+
+    def call(String prefix, String botToken, String chatId) {
+      def jobName = env.JOB_NAME ?: "Unknow job"
+      def buildNumber = env.BUILD_NUMBER ?: ""
+      def buildStatus = currentBuild.currentResult ?: "UNKNOW"
+      def buildUrl = env.BUILD_URL ?: ""
+    
+      def tmpl = libraryResource 'msgTmpl.md'
+      def msg = tmpl
+            .replace('${prefix}', prefix)
+            .replace('${jobName}', jobName)
+            .replace('${buildNumber}', buildNumber)
+            .replace('${buildStatus}', buildStatus)
+            .replace('${buildUrl}', buildUrl)
+      sh """
+        curl -s -X POST https://api.telegram.org/bot${botToken}/sendMessage \
+        -d chat_id=${chatId} \
+        -d parse_mode=Markdown \
+        -d text="${msg.replace("\"", "\\\"")}"
+      """
+    }
 Подключаем к нашему Jenkins:Настройки Jenkins->System->Global Trusted Pipeline Libraries
 
 ![notify](/lesson_30/screenshots/add-shared-lib.png)
@@ -125,3 +166,66 @@ Groovy и работа с DSL job.</h2>
 <h3>Пишем Jenkinsfile</h3>
 
 Пишем [Jenkinsfile](https://github.com/ioannsnakej/bookstore/blob/main/Jenkinsfile)
+
+    @Library('jenkins-shared-lib') _
+    def GIT_URL = "git@github.com:ioannsnakej/bookstore.git"
+    
+    pipeline {
+      agent {label 'docker'}
+      parameters {
+        gitParameter(type: 'PT_BRANCH', name: 'GIT_BRANCH', branchFilter: 'origin/(.*)', defaultValue: 'main', selectedValue: 'DEFAULT', sortMode: 'DESCENDING_SMART')
+      }
+    
+      environment {
+        DOCKER_REPO="ivankhodyrev/bookstore"
+        TG_BOT_TOKEN=credentials('bot_token')
+        TG_CHAT_ID=credentials('chat_id')
+      }
+    
+      stages {
+    
+        stage('Checkout') {
+          steps {
+            git branch: "${params.GIT_BRANCH}", url: "${GIT_URL}", credentialsId: 'github_ssh'
+          }
+        }
+    
+        stage('Login to dockerhub') {
+          steps {
+            script {
+              dockerBuild.login()
+            }
+          }
+        }
+    
+        stage('Build docker image') {
+          steps {
+            script {
+              dockerBuild.build(env.DOCKER_REPO)
+            }
+          }
+        }
+    
+        stage('Push image to dockerhub') {
+          steps {
+            script {
+              dockerBuild.push(env.DOCKER_REPO)
+            }
+          }
+        }
+      }
+    
+      post {
+        success {
+          script {
+            notifyTelegram("✅ Success build", env.TG_BOT_TOKEN, env.TG_CHAT_ID)
+          }
+        }
+    
+        failure {
+          script {
+            notifyTelegram("❌ Failed build!!!", env.TG_BOT_TOKEN, env.TG_CHAT_ID)
+          }
+        }
+      }
+    }
