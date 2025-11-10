@@ -70,7 +70,7 @@ Groovy и работа с DSL job.</h2>
   
   ![notify](/lesson_30/screenshots/start-vm.png)
 
-2. Выполняем на основном хосте наш [playbook](https://github.com/ioannsnakej/ansible-roles-setup-jenkins/blob/main/playbooks/setup-jenkins-agent.yml) с ролью [setup-jenkins-agent] (https://github.com/ioannsnakej/ansible-roles-setup-jenkins/tree/main/roles/setup-jenkins-agent)
+2. Выполняем на основном хосте наш [playbook](https://github.com/ioannsnakej/ansible-roles-setup-jenkins/blob/main/playbooks/setup-jenkins-agent.yml) с ролью [setup-jenkins-agent](https://github.com/ioannsnakej/ansible-roles-setup-jenkins/tree/main/roles/setup-jenkins-agent)
 3. В настройках нашего репозитория [bookstore](https://github.com/ioannsnakej/bookstore/) добавляем новый Deploy
 
        key title: jenkins-agent
@@ -108,11 +108,13 @@ Groovy и работа с DSL job.</h2>
 
 ![notify](/lesson_30/screenshots/jenkins-nodes.png)
 <h3>Добавляем docker creds</h3>
-Создаем новый Personal access token [dockerhub]https://app.docker.com/accounts/ivankhodyrev и добавляем его в Jenkins credentials:
+
+Создаем новый Personal access token [dockerhub](https://hub.docker.com/repositories/ivankhodyrev) и добавляем его в Jenkins credentials:
 
 ![notify](/lesson_30/screenshots/docker_creds.png)
 <h3>Создание и настройка shared-lib</h3>
-Создаем [shared-libs](https://github.com/ioannsnakej/jenkins-shared-lib/tree/main) со скриптами groovy
+
+Создаем [shared-lib](https://github.com/ioannsnakej/jenkins-shared-lib/tree/main) со скриптами groovy
 
 Подключаем к нашему Jenkins:Настройки Jenkins->System->Global Trusted Pipeline Libraries
 
