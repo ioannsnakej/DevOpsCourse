@@ -110,8 +110,16 @@ Groovy и работа с DSL job.</h2>
 <h3>Добавляем docker creds</h3>
 Создаем новый Personal access token [dockerhub]https://app.docker.com/accounts/ivankhodyrev и добавляем его в Jenkins credentials:
 
-![notify](/lesson_30/screenshots/docker_creds.jpg)
-<h3>Создание и настройка Pipeline</h3>
+![notify](/lesson_30/screenshots/docker_creds.png)
+<h3>Создание и настройка shared-lib</h3>
 Создаем [shared-libs](https://github.com/ioannsnakej/jenkins-shared-lib/tree/main) со скриптами groovy
+
+Подключаем к нашему Jenkins:Настройки Jenkins->System->Global Trusted Pipeline Libraries
+
+![notify](/lesson_30/screenshots/add-shared-lib.png)
+
+![notify](/lesson_30/screenshots/add-shared-lib2.png)
+
+<h3>Пишем Jenkinsfile</h3>
 
 Пишем [Jenkinsfile](https://github.com/ioannsnakej/bookstore/blob/main/Jenkinsfile)
