@@ -373,6 +373,8 @@ notifyTelegram.groovy:
 
 <h3>Результат</h3>
 
+![notify](/lesson_30/screenshots/items.png)
+
 ![notify](/lesson_30/screenshots/build-res.png)
 
 ![notify](/lesson_30/screenshots/deploy-res.png)
