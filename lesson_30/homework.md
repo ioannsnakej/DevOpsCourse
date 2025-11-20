@@ -163,6 +163,9 @@ notifyTelegram.groovy:
 
 ![notify](/lesson_30/screenshots/add-shared-lib2.png)
 
+<h3>Наши Креды, не буду на них сильно останавливаться, но мы используем их в наших pipelines (Например, креды бд)</h3>
+![notify](/lesson_30/screenshots/credentials.png)
+
 <h3>Пишем Jenkinsfile</h3>
 
 Пишем [Jenkinsfile](https://github.com/ioannsnakej/bookstore/blob/main/Jenkinsfile)
@@ -180,6 +183,10 @@ notifyTelegram.groovy:
         DOCKER_REPO="ivankhodyrev/bookstore"
         TG_BOT_TOKEN=credentials('bot_token')
         TG_CHAT_ID=credentials('chat_id')
+        DB_USER = credentials('db_user')
+        DB_NAME = credentials('db_name')
+        DB_HOST = credentials('db_host')
+        DB_PASS = credentials('db_pass')
       }
     
       stages {
@@ -206,10 +213,47 @@ notifyTelegram.groovy:
           }
         }
     
+        stage('Test image') {
+          steps {
+            script {
+              writeFile file: "./.env", text: """
+                DB_USER=${DB_USER}
+                DB_NAME=${DB_NAME}
+                DB_HOST=${DB_HOST}
+                DB_PASS=${DB_PASS}
+              """
+    
+              sh """
+                docker compose up -d 
+                sleep 30
+                curl -f localhost:8080/books
+              """
+            }
+          }
+          post {
+            always {
+              sh """
+                docker compose down -v
+              """
+            }
+          }
+        }
+    
         stage('Push image to dockerhub') {
           steps {
             script {
               dockerBuild.push(env.DOCKER_REPO)
+            }
+          }
+        }
+    
+        stage('Call Deploy') {
+          when {
+            expression { return params.RUN_DEPLOY }
+          }
+          steps {
+            script {
+              build quietPeriod: 5, wait: false, job: 'deploy-app', parameters: [string(name: 'DOCKER_IMAGE', value: "${env.DOCKER_REPO}")]
             }
           }
         }
@@ -229,3 +273,108 @@ notifyTelegram.groovy:
         }
       }
     }
+Пишем [Jenkinsfile-deploy](https://github.com/ioannsnakej/bookstore/blob/main/Jenkinsfile-deploy):
+
+    @Library('jenkins-shared-lib') _
+    
+    def remote = [:]
+    
+    pipeline {
+      agent { label 'target' }
+      
+      parameters {
+        string (name: 'DOCKER_IMAGE', description: 'Image to deploy', defaultValue: 'ivankhodyrev/bookstore:latest')
+      }
+    
+      environment {
+        HOST = "192.168.56.3"
+        TOKEN = credentials('docker_creds')
+        PRJ_DIR = "/var/www/bookstore"
+        GIT_URL = "git@github.com:ioannsnakej/bookstore.git"
+        TG_BOT_TOKEN=credentials('bot_token')
+        TG_CHAT_ID=credentials('chat_id')
+        DB_USER = credentials('db_user')
+        DB_NAME = credentials('db_name')
+        DB_HOST = credentials('db_host')
+        DB_PASS = credentials('db_pass')
+      }
+    
+      stages {
+    
+        stage('Checkout') {
+          steps {
+            git branch: "main", url: "${GIT_URL}", credentialsId: 'github_ssh'
+          }
+        }
+    
+        stage('Add .env and compose.yml') {
+          steps {
+            script {
+                writeFile file: "${PRJ_DIR}/.env", text: """
+                DB_USER=${DB_USER}
+                DB_NAME=${DB_NAME}
+                DB_HOST=${DB_HOST}
+                DB_PASS=${DB_PASS}
+              """
+              sh """
+                cp compose.tmpl ${PRJ_DIR}
+                cp -r nginx/ ${PRJ_DIR}
+                cd ${PRJ_DIR}
+                export DOCKER_IMAGE=${params.DOCKER_IMAGE}
+                envsubst < compose.tmpl > compose.yml
+              """
+            }
+          }
+        }
+    
+        stage('Prepare Credentials') {
+          steps {
+            withCredentials([sshUserPrivateKey(credentialsId: 'jenkins_ssh', usernameVariable: 'username', keyFileVariable: 'private_key')]) {
+              script {
+                remote.name = env.HOST
+                remote.host = env.HOST
+                remote.user = "${username}"
+                remote.identity = readFile "${private_key}"
+                remote.allowAnyHosts = true
+              }
+            }
+          }
+        }
+    
+        stage('Deploy') {
+          steps {
+            script {
+              sshCommand remote: remote, command: """
+                set -x
+                docker pull "${params.DOCKER_IMAGE}"
+                cd "${env.PRJ_DIR}"
+                docker compose down || true
+                docker compose up -d
+                docker compose ps
+              """
+            }
+          }
+        }
+      }
+    
+      post {
+        success {
+          script {
+            notifyTelegram("✅ Deploy success", env.TG_BOT_TOKEN, env.TG_CHAT_ID)
+          }
+        }
+        failure {
+          script {
+            notifyTelegram("❌ Deploy failed", env.TG_BOT_TOKEN, env.TG_CHAT_ID)
+          }
+        }
+      }
+    }
+
+<h3>Результат</h3>
+
+![notify](/lesson_30/screenshots/build-res.png)
+
+![notify](/lesson_30/screenshots/deploy-res.png)
+
+![notify](/lesson_30/screenshots/notify.png)
