@@ -51,3 +51,4 @@ GitLab->Repo->Settings->CI/CD->Runners->Create project runner
     sudo systemctl daemon-reload
     sudo systemctl start diplom-runner.service
     sudo systemctl status diplom-runner.service
+    sudo systemctl enable diplom-runner.service
