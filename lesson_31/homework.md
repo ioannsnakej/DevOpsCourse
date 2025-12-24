@@ -20,3 +20,13 @@ GitLab->Repo->Settings->CI/CD->Runners->Create project runner
     --url https://gitlab.com  
     --token glrt-lTnR0IL2v8cw-MXwYaxDo286MQpwOjE5cDd0dAp0OjMKdTpoNHhochg.01.1j15tpb12
 ![notify](/lesson_31/screens/gitlab-runner_register.png)
+Копируем конфиг в /home/gitlab-runner/.gitlab-runner:
+
+    sudo mkdir /home/gitlab-runner/.gitlab-runner
+    sudo cp /home/devops/.gitlab-runner/config.toml /home/gitlab-runner/.gitlab-runner/config.toml
+    sudo chown -R gitlab-runner:gitlab-runner /home/gitlab-runner
+Правим конфиг:
+
+    privileged = true
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"] -
+    монтируем докер сокет в контейнер, иначе джобы не запустятся
