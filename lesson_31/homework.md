@@ -19,3 +19,4 @@ GitLab->Repo->Settings->CI/CD->Runners->Create project runner
     gitlab-runner register  
     --url https://gitlab.com  
     --token glrt-lTnR0IL2v8cw-MXwYaxDo286MQpwOjE5cDd0dAp0OjMKdTpoNHhochg.01.1j15tpb12
+[notify](/lesson_31/screens/gitlab-runner_register.png)
