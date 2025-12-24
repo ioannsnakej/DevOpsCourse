@@ -30,3 +30,24 @@ GitLab->Repo->Settings->CI/CD->Runners->Create project runner
     privileged = true
     volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache"] -
     монтируем докер сокет в контейнер, иначе джобы не запустятся
+Пишем systemd unit:
+
+    /etc/systemd/system/diplom-runner.service
+***
+    [Unit]
+    Description="Docker gitlab-runner"
+    
+    [Service]
+    Type=simple
+    User=gitlab-runner
+    Group=gitlab-runner
+    WorkingDirectory=/home/gitlab-runner
+    ExecStart=/usr/bin/gitlab-runner run --working-directory /home/gitlab-runner --config /home/gitlab-runner/.gitlab-runner/config.toml
+    Restart=always
+    
+    [Install]
+    WantedBy=multi-user.target
+***
+    sudo systemctl daemon-reload
+    sudo systemctl start diplom-runner.service
+    sudo systemctl status diplom-runner.service
