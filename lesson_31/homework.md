@@ -52,3 +52,19 @@ GitLab->Repo->Settings->CI/CD->Runners->Create project runner
     sudo systemctl start diplom-runner.service
     sudo systemctl status diplom-runner.service
     sudo systemctl enable diplom-runner.service
+Далее нам надо на runner сгенерировать ключи и скопировать публичный ключ в файл пользователя gitlab-runner .ssh/authorized_keys на целевую машину:
+
+    sudo su - gitlab-runner
+    ssh-keygen -t ed25519
+    cat .ssh/id_ed25519.pub
+
+Предварительная настройка пользователя на целевой машине:
+
+    sudo adduser gitlab-runner
+    #в файл /etc/sudoers прописываем строку gitlab-runner ALL=(ALL:ALL) NOPASSWD:ALL
+    sudo visudo
+    su - gitlab-runner
+    mkdir .ssh
+    #вставляем скопированный публичный ключ в .ssh/authorized_keys
+    vim .ssh/authorized_keys
+
