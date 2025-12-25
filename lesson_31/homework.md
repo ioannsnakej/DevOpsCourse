@@ -68,3 +68,9 @@ GitLab->Repo->Settings->CI/CD->Runners->Create project runner
     #вставляем скопированный публичный ключ в .ssh/authorized_keys
     vim .ssh/authorized_keys
 
+Далее необходимо в gitlab добавить приватный ключ пользователя gitlab-runner с машины с раннером:
+GitLab->Repo->Settings->CI/CD->Variables->add variable:
+Type:File
+Visibility: Visible
+KEY:SSH_KEY
+VALUE: /home/gitlab-runner/.ssh/id_ed25519
