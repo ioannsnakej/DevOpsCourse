@@ -164,6 +164,7 @@ notifyTelegram.groovy:
 ![notify](/lesson_30/screenshots/add-shared-lib2.png)
 
 <h3>Наши Креды, не буду на них сильно останавливаться, но мы используем их в наших pipelines (Например, креды бд)</h3>
+
 ![notify](/lesson_30/screenshots/credentials.png)
 
 <h3>Пишем Jenkinsfile</h3>
