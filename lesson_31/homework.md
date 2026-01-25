@@ -76,3 +76,7 @@ GitLab->Repo->Settings->CI/CD->Variables->add variable:
     Visibility: Visible
     KEY:SSH_KEY
     VALUE: /home/gitlab-runner/.ssh/id_ed25519
+
+Пишим наш [.gitlab-ci.yml](https://gitlab.com/khodyrev-ivan/diplom/-/blob/main/.gitlab-ci.yml?ref_type=heads):
+
+
