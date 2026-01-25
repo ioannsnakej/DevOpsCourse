@@ -79,4 +79,155 @@ GitLab->Repo->Settings->CI/CD->Variables->add variable:
 
 Пишим наш [.gitlab-ci.yml](https://gitlab.com/khodyrev-ivan/diplom/-/blob/main/.gitlab-ci.yml?ref_type=heads):
 
+    image: docker:28.4.0
+    
+    .ssh_setup:
+      before_script:
+        - apk update && apk add openssh-client rsync bash
+        - eval "$(ssh-agent -s)"
+        - mkdir -p ~/.ssh
+        - chmod 700 ~/.ssh
+        - cat "$SSH_KEY" | ssh-add -
+        - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    
+    stages:
+      - lint
+      - build
+      - test
+      - prepare
+      - deploy
+      - notify
+    
+    variables:
+      REGISTRY: https://index.docker.io/v1/
+      DOCKER_REPO: ivankhodyrev/bookstore-app
+      DOCKER_USER: ivankhodyrev
+      TAG: ""
+      SSH_OPT: -o StrictHostKeyChecking=no
+      SSH_USER: gitlab-runner
+      HOST: 192.168.56.6
+      PRJ_DIR: /var/www/bookstore-app
+      GIT_URL: https://gitlab.com/khodyrev-ivan/diplom.git
+      API_URL: https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage
+      TELEGRAM_CHAT_ID: 940670214
+      TIMEOUT: 5
+      IMAGE_TAG: ${DOCKER_REPO}:${CI_PIPELINE_ID}
+      DB_USER: bookstoreuser
+      DB_NAME: bookstore
+      DB_HOST: db
+    
+    linter-app:job:
+      stage: lint
+      image: python:3.12-slim
+      before_script:
+        - pip install pylint flask psycopg2-binary python-dotenv
+      script:
+        - pylint ./app/*.py
+      allow_failure: true
+      tags:
+        - runner
+    
+    linter-docker:job:
+      stage: lint
+      image: hadolint/hadolint:latest-debian
+      script:
+        - hadolint Dockerfile
+      allow_failure: true
+      tags:
+        - runner
+    
+    build:job:
+      stage: build
+      image:
+        name: gcr.io/kaniko-project/executor:v1.9.0-debug
+        entrypoint: [""]
+      script:
+        - echo "{\"auths\":{\"$REGISTRY\":{\"username\":\"$DOCKER_USER\",\"password\":\"$DOCKER_TOKEN\"}}}" > /kaniko/.docker/config.json
+        - /kaniko/executor --context=$CI_PROJECT_DIR --dockerfile=$CI_PROJECT_DIR/Dockerfile --destination=${IMAGE_TAG}
+      tags:
+        - runner
+    
+    test:job:
+      stage: test
+      needs: ["build:job"]
+      image: 
+        name: ${IMAGE_TAG}
+        entrypoint: [""] 
+      variables:
+        POSTGRES_DB: mydb
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_AUTH_METHOD: trust
+      services:
+        - name: postgres:16
+          alias: db
+      before_script:
+        - pip install -r ./app/requirements.txt
+      script:
+        - pytest -v --disable-warnings --maxfail=1 ./app/tests_app.py | tee bookstore-tests_${CI_PIPELINE_ID}.log
+      artifacts:
+        paths:
+          - bookstore-tests_${CI_PIPELINE_ID}.log
+      tags:
+        - runner
+    
+    prepare:job:
+      stage: prepare
+      extends: .ssh_setup
+      script:
+        - |
+          if [ -f .env ] && grep 'DB_PASS' .env; then
+            DB_PASS=$(grep 'DB_PASS' .env | cut -d= -f2 | tr -d '\"')
+          else
+            DB_PASS=$(openssl rand -base64 9 | tr -dc 'A-Za-z0-9' | head -c12)
+          fi
+          ssh ${SSH_USER}@${HOST} "
+            test -d /var/www || sudo mkdir -p /var/www;
+            sudo chown -R gitlab-runner:gitlab-runner /var/www;
+            test -d ${PRJ_DIR} || git clone ${GIT_URL} ${PRJ_DIR};
+            cd ${PRJ_DIR};
+            git checkout main;
+            git pull;
+            cd ${PRJ_DIR};
+            {
+              echo "APP_IMAGE=${IMAGE_TAG}"
+              echo "DB_USER=${DB_USER}"
+              echo "DB_NAME=${DB_NAME}"
+              echo "DB_HOST=${DB_HOST}"
+              echo "DB_PASS=${DB_PASS}"
+            } > .env
+          "
+      tags:
+        - runner
+    
+    
+    deploy-compose:
+      stage: deploy
+      needs: ["prepare:job"]
+      extends: .ssh_setup
+      script:
+        - |
+          ssh ${SSH_USER}@${HOST} "cd ${PRJ_DIR}; 
+          sudo docker compose up -d"
+      tags:
+        - runner
+    
+    notify-tg:
+      stage: notify
+      image: curlimages/curl
+      before_script: |
+          export URL=${API_URL}
+          export TEXT="Deploy Project: $CI_PROJECT_NAME%0ABranch: $CI_COMMIT_REF_NAME%0APipeline: $CI_PIPELINE_URL%0AUser: $GITLAB_USER_NAME"
+      script:
+        - curl -s --max-time $TIMEOUT -d "chat_id=$TELEGRAM_CHAT_ID&disable_web_page_preview=1&text=$TEXT" $URL > /dev/null
+      tags:
+        - runner
 
+Скриншоты:
+
+Сборка:
+![notify](/lesson_31/gitlabci_build.png)
+Уведомление в тг:
+![notify](/lesson_31/notify_tg.png)
+Приложение в браузере:
+![notify](/lesson_31/app_in_browser.png)
