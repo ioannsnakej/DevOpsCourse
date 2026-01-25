@@ -1,5 +1,5 @@
 for GitLab CI needs:
-1. [Repo](https://gitlab.com/khodyrev-ivan/diplom/-/tree/main?ref_type=heads)
+1. [Repo](https://gitlab.com/khodyrev-ivan/diplom)
 2. Runner
 3. .gitlab-ci.yml
 
@@ -226,8 +226,13 @@ GitLab->Repo->Settings->CI/CD->Variables->add variable:
 Скриншоты:
 
 Сборка:
+
 ![notify](/lesson_31/gitlabci_build.png)
+
 Уведомление в тг:
+
 ![notify](/lesson_31/notify_tg.png)
+
 Приложение в браузере:
+
 ![notify](/lesson_31/app_in_browser.png)
