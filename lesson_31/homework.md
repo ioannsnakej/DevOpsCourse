@@ -227,12 +227,12 @@ GitLab->Repo->Settings->CI/CD->Variables->add variable:
 
 Сборка:
 
-![notify](/lesson_31/gitlabci_build.png)
+![notify](/lesson_31/screens/gitlabci_build.png)
 
 Уведомление в тг:
 
-![notify](/lesson_31/notify_tg.png)
+![notify](/lesson_31/screens/notify_tg.png)
 
 Приложение в браузере:
 
-![notify](/lesson_31/app_in_browser.png)
+![notify](/lesson_31/screens/app_in_browser.png)
