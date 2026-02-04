@@ -129,18 +129,6 @@
         metadata = {
             user-data = "${file("./users.txt")}"
         }
-    
-        connection {
-            host = self.network_interface.0.nat_ip_address
-            type = "ssh"
-            user = "ivan"
-            private_key = file("~/.ssh/id_ed25519")
-            timeout = "5m"
-        }
-    
-        provisioner "local-exec" {
-            command = "cd ../ansible && ansible-playbook -i '${self.network_interface.0.nat_ip_address},' ./playbooks/playbook.yml"
-        }
     }
 
 ## Создаем users.txt:
@@ -175,6 +163,7 @@
 ![notify](/lesson_39/running.png)
 
 ![notify](/lesson_39/ssh_connect.png)
+
 Удаляем:
 
     terraform destroy
