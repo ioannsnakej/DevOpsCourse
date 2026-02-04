@@ -170,3 +170,13 @@
 Выполняем:
 
     terraform apply
+![notify](/lesson_39/provisioning.png)
+
+![notify](/lesson_39/running.png)
+
+![notify](/lesson_39/ssh_connect.png)
+Удаляем:
+
+    terraform destroy
+
+![notify](/lesson_39/deleting.png)
